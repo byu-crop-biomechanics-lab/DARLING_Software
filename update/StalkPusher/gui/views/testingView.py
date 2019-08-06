@@ -357,7 +357,7 @@ class TestingView(v.View):
         if not os.path.isdir(folderPath):
             os.makedirs(folderPath)
 
-        fileName = self.app.getEnvData(d.TIME) + '_P1_T' + str(d.testNumber)
+        fileName = self.app.getEnvData(d.TIME) + '_P' + str(self.app.getSetting(d.TEST_PLOT)) + '_T' + str(d.testNumber)
         writePath = os.path.join(folderPath, fileName)
 
         if os.path.exists(writePath + d.TEST_FILE_FORMAT):
