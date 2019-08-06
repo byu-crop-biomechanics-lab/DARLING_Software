@@ -32,7 +32,7 @@ postTest = 2
 
 class TestingView(v.View):
     def __init__(self, app, prevView = None):
-        self.title = 'TESTS'
+        self.title = 'TESTING'
         self.btnDefs = [
                 (
                     {'label': 'START', 'id': 'startBtn', 'funct': self.startTest},
@@ -697,7 +697,7 @@ class TestingView(v.View):
         self.resetEnvData()
         self.saveTest()
         self.drop()
-        self.title = 'TESTS'
+        self.title = 'TESTING'
 
     def drop(self):
 #         self.app.hd.getAll()
