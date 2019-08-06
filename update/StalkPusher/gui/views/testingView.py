@@ -55,7 +55,7 @@ class TestingView(v.View):
             ]
         self.saveBtnDef = {'label': 'SAVE', 'id': 'saveBtn', 'funct': self.save}
         super().__init__(app, prevView)
-        
+
 
         self.streaming = False
         self.numBtnX = self.cax
@@ -64,9 +64,9 @@ class TestingView(v.View):
         self.drawPots = False
         self.drawXY = False
         self.drawWAdj = False
-        
+
         self.tests = 0
-        
+
         self.startGraph()
 
         self.lastDataT = t.time()
@@ -74,9 +74,9 @@ class TestingView(v.View):
         self.inVals = 0
         self.tr = 0
         self.ta = 0
-        
+
         self.initPreTestInfoLayout()
-        
+
         self.inPrRect = rl.RectLabel(app = self.app,
                                      pos = (self.cax,  self.cay),
                                      dim = (70*d.px, 70*d.py),
@@ -86,15 +86,15 @@ class TestingView(v.View):
                                      bcgCol = d.light_green,
                                      scaleFactor = 0.7
                                      )#in progress rectangle
-        
-        
+
+
         self.postItems = []
         self.setPostItemFocusNum(0)
 
         self.envDataFlags = [0]*4
 
         self.initConfMsgsShown = False
-        
+
         self.postItems.append(nl.NoteList(self.app, self.disp,{'x':self.cax-28*d.px,'y':self.cay, 'xdim':20*d.px, 'ydim': 25*d.py}, listName = 'postTestNotes', hasFocus = True))
 
         self.postItems.append(vb.ViewBtn(app = self.app,
@@ -128,33 +128,33 @@ class TestingView(v.View):
                                     formating = lambda lab, val: lab+ ': ' + str(val)
                                     )
                           )
-        
+
 
 #         self.makeConfirmMsgs()
-        
+
 
     def initPreTestInfoLayout(self):
         self.setItemFocusNum(0)
         self.cols = [self.cax - 20*d.px, self.cax + 20*d.px]
-        
+
         self.items = []
-        
+
         yRef = 26 * d.py
         yInt = 20 * d.py
         self.columns = 2
         self.rows = 4
-        
+
         self.items.append(vb.ViewBtn(app = self.app,
                                     pos = (self.cols[0], self.cay - yRef + 0*yInt),
                                     dim = (28*d.px, 18*d.py),
                                     label = 'FOLDER',
                                     value = self.app.getSetting(d.TEST_FOLDER),
-                                    funct = self.toTestFolderSetting, 
+                                    funct = self.toTestFolderSetting,
                                     focus = True,
                                     formating = lambda lab, val: lab+ ':\n' + str(val)
                                     )
                           )
-        
+
         self.items.append(self.NoteListWrapper(self.app,self.disp,{'x':self.cols[1],'y':self.cay-16*d.py, 'xdim':24*d.px, 'ydim': 18*d.py}, listName = 'preTestNotes', focus =False, metaData = {'funct': self.toNoteSetting}))
         self.items.append(vb.ViewBtn(app = self.app,
                                     pos = (self.cols[0], self.cay - yRef + 1*yInt),
@@ -167,7 +167,7 @@ class TestingView(v.View):
                                     )
                           )
         self.items.append(None)
-        
+
         self.items.append(vb.ViewBtn(app = self.app,
                                     pos = (self.cols[0], self.cay - yRef + 2*yInt),
                                     dim = (28*d.px, 18*d.py),
@@ -178,7 +178,7 @@ class TestingView(v.View):
                                     formating = lambda lab, val: lab+ ':\n' + str(val)+'cm'
                                     )
                           )
-                
+
         self.items.append(self.NoteListWrapper(self.app,self.disp,{'x':self.cols[1],'y':self.cay+22*d.py, 'xdim':24*d.px, 'ydim': 18*d.py}, listName = 'postTestNotes', focus =False, metaData = {'funct': self.toNoteSetting}))
 
         self.items.append(vb.ViewBtn(app = self.app,
@@ -191,7 +191,7 @@ class TestingView(v.View):
                                     formating = lambda lab, val: lab+ ':\n' + str(val)
                                     )
                           )
-        self.items.append(None)        
+        self.items.append(None)
     def makeConfirmMsgs(self):
         self.popAllMsg()
         #test folder
@@ -220,7 +220,7 @@ class TestingView(v.View):
                                     bdData = {'font': self.app.confMsgBdFont}
                                     )
                          )
-        
+
         #test height
         self.pushMsg(msg.Message(self.app, self, self.disp,
                                     'Confirm/edit test height.',
@@ -231,10 +231,10 @@ class TestingView(v.View):
                                         {},
                                         {}
                                     ),
-                                    bdData = {'font': self.app.confMsgBdFont}                                 
+                                    bdData = {'font': self.app.confMsgBdFont}
                                     )
                          )
-        
+
         #plot preTestNotes
         preTestNotes = self.app.getSetting(d.PRE_TEST_NOTES)
         self.pushMsg(msg.Message(self.app, self, self.disp,
@@ -246,7 +246,7 @@ class TestingView(v.View):
                                         {},
                                         {}
                                     ),
-                                    bdData = {'font': self.app.confMsgBdFont}                                 
+                                    bdData = {'font': self.app.confMsgBdFont}
                                     )
                          )
         self.pushMsg(msg.Message(self.app, self, self.disp,
@@ -258,11 +258,11 @@ class TestingView(v.View):
                                         {},
                                         {}
                                     ),
-                                    bdData = {'font': self.app.confMsgBdFont}                                                      
+                                    bdData = {'font': self.app.confMsgBdFont}
                                     )
                          )
-        
-        
+
+
     def setBreakHeight(self):
         self.app.setView(kbv.KeyboardView(self.app, self,
                                       d.NUM,
@@ -270,7 +270,7 @@ class TestingView(v.View):
                                       'breakHeight',
                                       suffix = d.HEIGHT_UNIT
                                       ))
-        
+
     def saveTest(self):
         dataMatrix = []
         ###TEST ATTRIBUTES
@@ -280,7 +280,7 @@ class TestingView(v.View):
 
         dataMatrix.append(['----------TEST ATTRIBUTES----------'])
         dataMatrix.append(['FIELD', 'VALUE', 'UNIT'])
-        
+
         date = dp.DateParse(self.app.getEnvData(d.TIME))
         dataMatrix.append(['YEAR', date.year])
         dataMatrix.append(['MONTH', date.month])
@@ -292,9 +292,9 @@ class TestingView(v.View):
 
         dataMatrix.append(['TEMPERATURE', self.app.getEnvData(d.TEMPERATURE), self.getUnit(d.DS_TEMP)])
         dataMatrix.append(['HUMIDITY', self.app.getEnvData(d.HUMIDITY), self.getUnit(d.DS_HUM)])
-        
+
         gpsData = self.app.getEnvData(d.LOCATION)
-        
+
         if gpsData != hd.NO_GPS:
             [lat, lon] = gpsData.split('|')
             dataMatrix.append(['LATITUDE', lat, d.GPS_UNIT])
@@ -310,7 +310,7 @@ class TestingView(v.View):
         for i in range(d.MAX_NOTES):
             #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             toAppend = ['PRE_TEST_NOTE_' + str(i+1), preNotes[i] if i < len(preNotes) else '']
-            #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%                
+            #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
             dataMatrix.append(toAppend)
         #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -319,52 +319,52 @@ class TestingView(v.View):
         for i in range(d.MAX_NOTES):
             #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             dataMatrix.append(['POST_TEST_NOTE_' + str(i+1), postNotes[i] if i< len(postNotes) else ''])
-            #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%        
-        
+            #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
         ###
-        dataMatrix.append(['BREAK_HEIGHT', self.breakHeight if self.breakHeight is not None else 'N/A', d.HEIGHT_UNIT]) 
-        dataMatrix.append(['LCA_WEIGHT', self.app.getSetting(d.LCA_WEIGHT), d.LCA_WEIGHT_UNIT]) 
+        dataMatrix.append(['BREAK_HEIGHT', self.breakHeight if self.breakHeight is not None else 'N/A', d.HEIGHT_UNIT])
+        dataMatrix.append(['LCA_WEIGHT', self.app.getSetting(d.LCA_WEIGHT), d.LCA_WEIGHT_UNIT])
 
         ####SENSORS
         dataMatrix.append(['----------SENSOR CALIBRATION DATA (stored_value*A + B = raw_data)------'])
 
         dataMatrix.append(['SENSOR','A','B','UNIT', 'ID'])
-        
+
         sensorData = self.app.getSetting(d.SENSORS)
-        
+
         dataMatrix.append([d.DS_LOAD_X] + list(self.getABUnit(d.DS_LOAD_X)) + [sensorData[d.DS_LOAD_X]])
         dataMatrix.append([d.DS_LOAD_Y] + list(self.getABUnit(d.DS_LOAD_Y)) + [sensorData[d.DS_LOAD_Y]])
         dataMatrix.append([d.DS_IMU] + list(self.getABUnit(d.DS_IMU)) + [sensorData[d.DS_IMU]])
         dataMatrix.append([d.DS_POT] + list(self.getABUnit(d.DS_POT)) + [sensorData[d.DS_POT]])
         dataMatrix.append([d.DS_TEMP] + list(self.getABUnit(d.DS_TEMP)) + [sensorData[d.DS_TEMP]])
-        dataMatrix.append([d.DS_HUM] + list(self.getABUnit(d.DS_HUM)) + [sensorData[d.DS_HUM]])                               
-                               
+        dataMatrix.append([d.DS_HUM] + list(self.getABUnit(d.DS_HUM)) + [sensorData[d.DS_HUM]])
+
         ###TEST DATA
         max_len = len(self.times)
-        
+
         dataMatrix.append(['----------TEST DATA-----------'])
-        
-        dataMatrix.append(d.testHeaders)       
+
+        dataMatrix.append(d.testHeaders)
         for i in range(max_len):
             dataMatrix.append([self.times[i], self.anglePots[i], self.angleImus[i], self.loadsX[i], self.loadsY[i]])
-                    
+
         TEST_FOLDERS_PATH = os.path.join(d.RASPI_DATA_PATH, d.TESTS_DIR)
         if not os.path.isdir(TEST_FOLDERS_PATH):
             os.makedirs(TEST_FOLDERS_PATH)
-                        
+
         folderPath = os.path.join(TEST_FOLDERS_PATH, self.app.getSetting(d.TEST_FOLDER))
         if not os.path.isdir(folderPath):
             os.makedirs(folderPath)
 
-        fileName = self.app.getEnvData(d.TIME)
+        fileName = self.app.getEnvData(d.TIME) + '_P1_T1'
         writePath = os.path.join(folderPath, fileName)
-        
+
         if os.path.exists(writePath + d.TEST_FILE_FORMAT):
             i = 2
             while os.path.exists(writePath +'(' + str(i) + ')' + d.TEST_FILE_FORMAT):
                 i+=1
             writePath = writePath +'(' + str(i) + ')'
-            
+
         with open(writePath  + d.TEST_FILE_FORMAT, 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',',
                             quotechar='|', quoting=csv.QUOTE_MINIMAL)
@@ -403,11 +403,11 @@ class TestingView(v.View):
 
     def setPostItemFocusNum(self, num):
         self.postItemFocusNum = num
-        
+
     def setPostItemFocus(self, num):
         self.postItems[self.postItemFocusNum].setFocus(False)
         self.postItemFocusNum = num
-        self.postItems[self.postItemFocusNum].setFocus(True)            
+        self.postItems[self.postItemFocusNum].setFocus(True)
 
     def edit(self):
         self.items[self.itemFocusNum].funct()
@@ -415,7 +415,7 @@ class TestingView(v.View):
         from views import pastTestsView as ptv
         print('go to past tests')
         self.app.setView(ptv.PastTestsView(self.app, self.graph, self))
-        
+
     #     self.focusItem.
     def toNoteSetting(self):
         from views import notesSettingView as nsv
@@ -429,7 +429,7 @@ class TestingView(v.View):
                                       'operator',
                                       self.app.getSetting(d.OPERATOR)
                                       ))
-        
+
     def toTestFolderSetting(self):
         self.app.setView(kbv.KeyboardView(self.app, self,
                                       d.ALPHA,
@@ -437,7 +437,7 @@ class TestingView(v.View):
                                       'testFolder',
                                       self.app.getSetting(d.TEST_FOLDER)
                                       ))
-        
+
     def keyboardReturn(self, key, value, status = 1):
         if key == 'testFolder':
             self.app.saveSetting(d.TEST_FOLDER, value)
@@ -464,7 +464,7 @@ class TestingView(v.View):
             try:
                 intVal = int(value)
                 self.app.saveSetting(d.TEST_PLOT, intVal)
-                self.initPreTestInfoLayout()                
+                self.initPreTestInfoLayout()
             except:
                 self.pushMsg(msg.Message(self.app, self, self.disp,
                                             'Invalid plot number.',
@@ -481,7 +481,7 @@ class TestingView(v.View):
             try:
                 intVal = int(value)
                 self.app.saveSetting(d.TEST_HEIGHT, intVal)
-                self.initPreTestInfoLayout()                
+                self.initPreTestInfoLayout()
             except:
                 self.pushMsg(msg.Message(self.app, self, self.disp,
                                             'Invalid plot number.',
@@ -526,7 +526,7 @@ class TestingView(v.View):
         if not self.tests:
             if not self.initConfMsgsShown:
                 self.initConfMsgsShown = True
-                self.makeConfirmMsgs()        
+                self.makeConfirmMsgs()
         elif not self.tests % self.app.getSetting(d.DATA_CONFIRM_FREQ):
             self.makeConfirmMsgs()
 
@@ -555,58 +555,58 @@ class TestingView(v.View):
             return vector
         (a, b) = self.getAB(dataType)
         return (vector-b)/a
-        
+
     def addSaveBtn(self):
         self.addBtn(2, self.saveBtnDef, postTest)
-            
+
     def stopTest(self):
         #self.focusNum = 2
 #         self.stopDataIn = t.time()
         self.app.streaming = False
         self.app.hd.stopStream()
-        
+
         self.tests += 1
-        
+
         self.focusNum = postTest
 #         self.app.hd.getAll()
         self.initButArea()
-        
+
         tim.setTimer(d.SAVE_BTN_DELAY, self.addSaveBtn)
         #truncate data
         min_len = min(len(self.anglePots), len(self.angleImus), len(self.loadsX), len(self.loadsY), len(self.times))
         trunc = lambda a,i: a[0:i] if len(a) > i else a
 
 #         print('###RAW VECTORS###')
-# 
+#
 #         print('loadsX', len(self.loadsX))
 #         print('loadsY', len(self.loadsY))
 #         print('anglePots', len(self.anglePots))
 #         print('angleImus', len(self.angleImus))
 #         print('times', len(self.times))
-        
+
         self.loadsX = trunc(self.loadsX, min_len)
         self.loadsY = trunc(self.loadsY, min_len)
         self.anglePots = trunc(self.anglePots, min_len)
         self.angleImus = trunc(self.angleImus, min_len)
         self.times = trunc(self.times, min_len)
-                
+
 #         print('###POST VECTOR TRUNCATION###')
 #         print('loadsX', len(self.loadsX))
 #         print('loadsY', len(self.loadsY))
 #         print('anglePots', len(self.anglePots))
 #         print('angleImus', len(self.angleImus))
 #         print('times', len(self.times))
-        
+
         if self.times.size > 0:
             self.times -= self.times[0]
-        
-        
+
+
         ####convert data
         self.loadsX = self.convertedVector(self.loadsX, d.DS_LOAD_X)
         self.loadsY = self.convertedVector(self.loadsY, d.DS_LOAD_Y)
         self.anglePots = self.convertedVector(self.anglePots, d.DS_POT)
         self.angleImus = self.convertedVector(self.angleImus, d.DS_IMU)
-        
+
 #         print('###POST VECTOR CONVERSION###')
 #         print('loadsX', len(self.loadsX))
 #         print('loadsY', len(self.loadsY))
@@ -616,9 +616,9 @@ class TestingView(v.View):
 
         ####
         self.loads = np.sqrt(self.loadsX**2 + self.loadsY**2)
-        
+
         ##read current load unit
-        
+
         self.recalcWAdjLoads()
 #         print('###POST VECTOR ADDITION###')
         print('loadsX', self.loadsX)
@@ -629,14 +629,14 @@ class TestingView(v.View):
 #         print('anglePots', len(self.anglePots))
 #         print('angleImus', len(self.angleImus))
 #         print('times', len(self.times))
-        
+
 #         self.madeUpData()
-                      
-                      
-                      
+
+
+
         self.redrawGraph()
     def recalcWAdjLoads(self):
-        mass = self.app.getSetting(d.LCA_WEIGHT)#always in grams      
+        mass = self.app.getSetting(d.LCA_WEIGHT)#always in grams
         loadUnit = self.getUnit(d.DS_LOAD_X)
         if loadUnit.lower() in d.LBs:
             g = 1
@@ -648,13 +648,13 @@ class TestingView(v.View):
             angleUnit = self.getUnit(d.DS_POT)
         else:
             angleUnit = self.getUnit(d.DS_IMU)
-        
+
         if angleUnit.lower() in d.DEGs:
             angleConvFactor = 180/math.pi
         else:
-            angleConvFactor = 1                                    
+            angleConvFactor = 1
         self.wAdjLoads = pp.weightAdjLoads(self.loadsX, self.loadsY, self.angleImus*angleConvFactor, mass ,g)
-                
+
     def save(self):
         self.app.hd.getAll()
         if not len(self.times):
@@ -691,8 +691,8 @@ class TestingView(v.View):
 
 
 
-        
-        self.resetEnvData()                 
+
+        self.resetEnvData()
         self.saveTest()
         self.drop()
 
@@ -728,31 +728,31 @@ class TestingView(v.View):
             self.graph.clear()
 #             print('returnng')
             return
-                        
+
         with self.app.hd.threadLock:
-            
+
             if self.drawPots:
                 angleUnit = ' (POT.)' + '[' + ((self.getABUnit(d.DS_POT))[-1])+']'
-                angles = self.anglePots                            
+                angles = self.anglePots
             else:
                 angleUnit = ' (IMU)' + '[' + ((self.getABUnit(d.DS_IMU))[-1])+']'
-                angles = self.angleImus                            
+                angles = self.angleImus
             if self.drawXY:
 
                 loadUnit = ' X: [' + ((self.getABUnit(d.DS_LOAD_X))[-1]) + '], Y: [' + ((self.getABUnit(d.DS_LOAD_Y))[-1]) +']'
                 loads1 = self.loadsX
                 loads2 = self.loadsY
                 highlights = np.array([])
-                
+
             else:
                 if self.drawWAdj:
                     loadUnit = ' W-Adj F: [' + ((self.getABUnit(d.DS_LOAD_X))[-1]) + ']'
                     loads1 = self.wAdjLoads
                 else:
                     loadUnit = ' F: [' + ((self.getABUnit(d.DS_LOAD_X))[-1]) + ']'
-                    loads1 = self.loads                                  
+                    loads1 = self.loads
                 loads2 = np.array([])
-                                                                 
+
             annotations = []
             #INDEX OUT OF BOUNDS %%%%%%%%%%%%%%%%%%%%
             if angles[0] > self.app.getSetting(d.MAX_START_ANGLE):
@@ -766,28 +766,28 @@ class TestingView(v.View):
                                     'ha': 'right',
                                     'va': 'bottom',
                                     'bcg_col': 'red'})
-            
+
 #             (trueMaxInd, highlights) = pp.checkValidity(loads1)
 #             if trueMaxInd != -1:
 #                 annotations.append({'text':'ML (' + str("%0.1f" % loads1[trueMaxInd]) + ')',
 #                     'index': trueMaxInd,
 #                     'ptx': angles[trueMaxInd],
-#                     'pty': loads1[trueMaxInd],                  
+#                     'pty': loads1[trueMaxInd],
 #                     'xpos': 0,
 #                     'ypos': 1,
 #                     'ha': 'left',
 #                     'va': 'top',
 #                     'bcg_col': 'green'})
-# 
+#
 #             if self.drawXY:
-#                 
+#
 #                 (trueMaxInd, hls) = pp.checkValidity(loads2)
-#                                 
+#
 #                 if trueMaxInd != -1:
 #                     annotations.append({'text':'MLY (' + str("%0.1f" % loads2[trueMaxInd]) + ')',
 #                         'index': trueMaxInd,
 #                         'ptx': angles[trueMaxInd],
-#                         'pty': loads2[trueMaxInd],                     
+#                         'pty': loads2[trueMaxInd],
 #                         'xpos': 1,
 #                         'ypos': 1,
 #                         'ha': 'right',
@@ -801,7 +801,7 @@ class TestingView(v.View):
                 xlabel = 'ROT.' + angleUnit,
                 ylabel = 'LOAD' + loadUnit,
                 highlights = highlights,
-                annotations = annotations                                              
+                annotations = annotations
             )
     def switchLoadMode(self):
         self.drawXY = not self.drawXY
@@ -812,8 +812,8 @@ class TestingView(v.View):
     def switchRotMode(self):
         self.drawPots = not self.drawPots
 #         self.postItems[2].setValue('Pot.'if self.drawPots else 'IMU')
-        self.postItems[2].setValue('Pot.'if self.drawPots else 'IMU')  
-        self.recalcWAdjLoads()      
+        self.postItems[2].setValue('Pot.'if self.drawPots else 'IMU')
+        self.recalcWAdjLoads()
         self.redrawGraph()
     def switchWAdjMode(self):
 #         if loadUnit not in d.Ns:
@@ -831,15 +831,15 @@ class TestingView(v.View):
 #             return
 
         self.drawWAdj = not self.drawWAdj
-        self.postItems[3].setValue('Yes'if self.drawWAdj else 'No')  
-        self.redrawGraph()    
+        self.postItems[3].setValue('Yes'if self.drawWAdj else 'No')
+        self.redrawGraph()
     def simulateDataIn(self):
         self.fullStreamDataIn(ri(0,100), ri(0,200), ri(0,100), ri(0,100), ri(0,100))
         self.lastDataT = t.time()
-    
+
     def startGraph(self):
         self.graph = g.Graph(self.disp, {'x':self.cax+10*d.px, 'y':self.cay-2*d.py, 'xdim': 54, 'ydim':73})
-    
+
     def displayView(self):
         self.butArea.display()
         if self.focusNum == preTest:
@@ -853,9 +853,9 @@ class TestingView(v.View):
             self.graph.display()
             for item in self.postItems:
                 item.display()
-    
-    
-    
+
+
+
     def upArrowPress(self):
         if self.focusNum == preTest:
             newI = (self.itemFocusNum - self.columns) % (self.columns * self.rows)
@@ -869,7 +869,7 @@ class TestingView(v.View):
     def downArrowPress(self):
         if self.focusNum == preTest:
             newI = (self.itemFocusNum + self.columns) % (self.columns * self.rows)
-            self.setItemFocus(newI)            
+            self.setItemFocus(newI)
             if self.items[newI] is None:
                 self.downArrowPress()
 #             else:
@@ -878,7 +878,7 @@ class TestingView(v.View):
 #                 self.setItemFocus(self.itemFocusNum+3)
         elif self.focusNum == postTest:
             self.postItems[self.postItemFocusNum].downArrowPress()
-            
+
     def leftArrowPress(self):
         if self.focusNum == preTest:
             newI = (self.itemFocusNum - 1) % self.columns + (self.itemFocusNum // self.columns) * self.columns
@@ -904,7 +904,7 @@ class TestingView(v.View):
 #                 self.setItemFocus(newI)
 
 #             if (self.itemFocusNum<len(self.items)-1):
-#                 self.setItemFocus(self.itemFocusNum+1)                
+#                 self.setItemFocus(self.itemFocusNum+1)
 #             else:
 #                 self.leftArrowPress()
         elif self.focusNum == postTest:
@@ -945,24 +945,24 @@ class TestingView(v.View):
 #         print('raspi: ' + str(int((t.time() - self.tr)*1000)), 'arduino: ' + str(float(value) - self.ta))
         self.tr = t.time()
         self.ta = float(value)
-        
+
         self.envDataFlags
-    
+
     def timeIn(self, year, month, day, hour, minute, second, millis):
         super().timeIn(year, month, day, hour, minute, second, millis)
-        self.envDataFlags[0] = 1      
+        self.envDataFlags[0] = 1
     def locationIn(self, x, y):
         super().locationIn(x, y)
-        self.envDataFlags[1] = 1      
+        self.envDataFlags[1] = 1
     def noGPS(self):
         super().noGPS()
-        self.envDataFlags[1] = 1      
+        self.envDataFlags[1] = 1
     def temperatureIn(self, value):
         super().temperatureIn(value)
-        self.envDataFlags[2] = 1      
+        self.envDataFlags[2] = 1
     def humidityIn(self, value):
         super().humidityIn(value)
-        self.envDataFlags[3] = 1      
+        self.envDataFlags[3] = 1
     def envDataReady(self):
         for flag in self.envDataFlags:
             if not flag:
@@ -976,7 +976,7 @@ class TestingView(v.View):
 #         self.postItems[0].reset()
         self.bringIfConfirmMsg()
         super().focusOn()
-        
+
     class NoteListWrapper:
         def __init__(self, app, disp, geoData, list = None, listName='', focus= False, metaData={}):
             self.app = app

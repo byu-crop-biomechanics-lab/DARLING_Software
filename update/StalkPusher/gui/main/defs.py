@@ -15,7 +15,7 @@ def readSettingFromFile(file_path):
     with open(file_path, 'r') as data_file:
         data = json.load(data_file)
         return data
-    
+
 #return a given setting
 def getSetting(setting):
     import json
@@ -37,7 +37,7 @@ def saveSettingsObject(settingsObject):
         data_file.seek(0)
         json.dump(settingsObject, data_file,indent=4)
         data_file.truncate()
-    
+
 #for parsing date
 TIME_DEL = '_'
 HOUR_DEL = ':'
@@ -204,6 +204,9 @@ testPlot = 0
 testNote = ''
 testNotes = []
 noteBank = []
+
+testNumber = 0
+
 #test saving
 testHeaders = ['TIME', 'ANGLE_POT', 'ANGLE_IMU', 'LOAD_X', 'LOAD_Y']
 #keyboard: num or word?
@@ -319,5 +322,4 @@ def darkenColor(color):
 def brightenColor(color):
     return [255 if (int(2*x) % 255) < x else (int(2*x) % 255) for x in color]
 def invertColor(color):
-    return [255 - x for x in color]    
-
+    return [255 - x for x in color]
