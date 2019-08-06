@@ -35,7 +35,7 @@ class TestingView(v.View):
         self.title = 'TESTING'
         self.btnDefs = [
                 (
-                    {'label': 'START', 'id': 'startBtn', 'funct': self.startTest},
+                    {'label': 'START\nTEST ' + str(d.testNumber), 'id': 'startBtn', 'funct': self.startTest},
                     {'label': 'TESTS', 'id': 'testFilesBtn', 'funct': self.toTestFiles},
                     {'label': 'EDIT', 'id': 'editBtn', 'funct': self.edit},
                     {'label': 'BACK', 'id': 'bckBtn', 'funct': self.back}
@@ -132,6 +132,27 @@ class TestingView(v.View):
 
 #         self.makeConfirmMsgs()
 
+    def updateButtons(self):
+        self.btnDefs = [
+                (
+                    {'label': 'START\nTEST ' + str(d.testNumber), 'id': 'startBtn', 'funct': self.startTest},
+                    {'label': 'TESTS', 'id': 'testFilesBtn', 'funct': self.toTestFiles},
+                    {'label': 'EDIT', 'id': 'editBtn', 'funct': self.edit},
+                    {'label': 'BACK', 'id': 'bckBtn', 'funct': self.back}
+                ),
+                (
+                    {},
+                    {'label': 'STOP', 'id': 'stopBtn', 'funct': self.stopTest},
+                    {},
+                    {}
+                ),
+                (
+                    {'label':'BREAK\nHEIGHT', 'id':'selectBtn', 'funct':self.setBreakHeight},
+                    {'label':'SELECT', 'id':'selectBtn', 'funct':self.selectBtn},
+                    {},
+                    {'label': 'REJECT', 'id': 'bckBtn', 'funct': self.drop}
+                )
+            ]
 
     def initPreTestInfoLayout(self):
         self.setItemFocusNum(0)
@@ -379,6 +400,9 @@ class TestingView(v.View):
 #                 writer.writerow([self.times[i], self.anglePots[i], self.angleImus[i], self.loadsX[i], self.loadsY[i]])
 #             #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
         print('written file to: ' + writePath + '.csv')
+        self.updateButtons()
+        self.title = 'TESTING'
+
     def padArray(self, arr, max_len):
         for i in range(max_len):
             if i >len(arr)-1:
@@ -413,6 +437,8 @@ class TestingView(v.View):
 
     def edit(self):
         self.items[self.itemFocusNum].funct()
+        self.updateButtons()
+
     def toTestFiles(self):
         from views import pastTestsView as ptv
         print('go to past tests')
@@ -637,6 +663,9 @@ class TestingView(v.View):
 
 
         self.redrawGraph()
+        self.title = 'TEST ' + str(d.testNumber) + ' RESULTS'
+
+
     def recalcWAdjLoads(self):
         mass = self.app.getSetting(d.LCA_WEIGHT)#always in grams
         loadUnit = self.getUnit(d.DS_LOAD_X)
@@ -706,6 +735,7 @@ class TestingView(v.View):
         self.focusNum = preTest
         self.initButArea()
         self.bringIfConfirmMsg()
+        self.title = 'TESTING'
 
     def back(self):
         if self.app.streaming:
@@ -846,21 +876,15 @@ class TestingView(v.View):
     def displayView(self):
         self.butArea.display()
         if self.focusNum == preTest:
-            self.title = 'TESTS'
             for item in self.items:
                 if item is not None:
                     item.display()
-            self.title = 'TESTING'
         elif self.focusNum == inTest:
-            self.title = 'TESTING'
             self.inPrRect.display()
-#             self.simulateDataIn()
         elif self.focusNum == postTest:
-            self.title = 'TEST ' + str(d.testNumber) + ' RESULTS'
             self.graph.display()
             for item in self.postItems:
                 item.display()
-            self.title = 'TEST ' + str(d.testNumber) + ' RESULTS'
 
 
 
