@@ -272,6 +272,7 @@ class TestingView(v.View):
                                       ))
 
     def saveTest(self):
+        d.testNumber += 1
         dataMatrix = []
         ###TEST ATTRIBUTES
         dataMatrix.append(['----------META DATA----------'])
