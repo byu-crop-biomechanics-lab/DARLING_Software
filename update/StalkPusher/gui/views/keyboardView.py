@@ -14,6 +14,7 @@ from items import message as msg
 
 class KeyboardView(v.View):
     def __init__(self, app, prevView = None, type = d.NUM, dataName = 'Data', retKey = '', input ='', maxlen = 20, prefix = '', suffix = ''):
+        self.sensorName = dataName
         self.title = 'INPUT: ' + dataName
         self.btnDefs = [
             (
@@ -26,7 +27,7 @@ class KeyboardView(v.View):
         super().__init__(app, prevView)
         self.type = type
         self.retKey = retKey
-        
+
         self.maxlen = maxlen
 
         self.currNotesX = self.cax
@@ -73,13 +74,16 @@ class KeyboardView(v.View):
                  }
             )
 
-            
+
     def displayView(self):
         self.keyBoard.display()
         self.inputRect.display()
+
     def save(self):
+        if self.sensorName == 'Plot number':
+            d.testNumber = 1
         if len(self.input)>0:
-            self.goBack()           
+            self.goBack()
             self.prevView.keyboardReturn(self.retKey, self.input)
         else:
             self.pushMsg(msg.Message(self.app, self, self.disp,
@@ -93,7 +97,7 @@ class KeyboardView(v.View):
                                     )
                                     )
                          )
-            
+
     def addChar(self):
         if len(self.input)<self.maxlen:
             self.input += self.keyBoard.getChar()
@@ -110,7 +114,7 @@ class KeyboardView(v.View):
                                     )
                                     )
                          )
-            
+
     def backSpace(self):
         if len(self.input)>0:
             self.input = self.input[:-1]
