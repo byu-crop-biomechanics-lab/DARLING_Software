@@ -32,7 +32,7 @@ postTest = 2
 
 class TestingView(v.View):
     def __init__(self, app, prevView = None):
-        self.title = 'TESTING'
+        self.title = 'TESTS'
         self.btnDefs = [
                 (
                     {'label': 'START', 'id': 'startBtn', 'funct': self.startTest},
@@ -272,7 +272,6 @@ class TestingView(v.View):
                                       ))
 
     def saveTest(self):
-        d.testNumber += 1
         dataMatrix = []
         ###TEST ATTRIBUTES
         dataMatrix.append(['----------META DATA----------'])
@@ -359,6 +358,8 @@ class TestingView(v.View):
 
         fileName = self.app.getEnvData(d.TIME) + '_P' + str(self.app.getSetting(d.TEST_PLOT)) + '_T' + str(d.testNumber)
         writePath = os.path.join(folderPath, fileName)
+
+        d.testNumber += 1
 
         if os.path.exists(writePath + d.TEST_FILE_FORMAT):
             i = 2
@@ -696,6 +697,7 @@ class TestingView(v.View):
         self.resetEnvData()
         self.saveTest()
         self.drop()
+        self.title = 'TESTS'
 
     def drop(self):
 #         self.app.hd.getAll()
@@ -844,16 +846,21 @@ class TestingView(v.View):
     def displayView(self):
         self.butArea.display()
         if self.focusNum == preTest:
+            self.title = 'TESTS'
             for item in self.items:
                 if item is not None:
                     item.display()
+            self.title = 'TESTING'
         elif self.focusNum == inTest:
+            self.title = 'TESTING'
             self.inPrRect.display()
 #             self.simulateDataIn()
         elif self.focusNum == postTest:
+            self.title = 'TEST ' + str(d.testNumber) + ' RESULTS'
             self.graph.display()
             for item in self.postItems:
                 item.display()
+            self.title = 'TEST ' + str(d.testNumber) + ' RESULTS'
 
 
 

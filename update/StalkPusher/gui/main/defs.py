@@ -204,8 +204,7 @@ testPlot = 0
 testNote = ''
 testNotes = []
 noteBank = []
-
-testNumber = 0
+testNumber = 1
 
 #test saving
 testHeaders = ['TIME', 'ANGLE_POT', 'ANGLE_IMU', 'LOAD_X', 'LOAD_Y']

@@ -81,7 +81,7 @@ class KeyboardView(v.View):
 
     def save(self):
         if self.sensorName == 'Plot number':
-            d.testNumber = 0
+            d.testNumber = 1
         if len(self.input)>0:
             self.goBack()
             self.prevView.keyboardReturn(self.retKey, self.input)
