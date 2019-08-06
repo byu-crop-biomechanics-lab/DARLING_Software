@@ -1,0 +1,115 @@
+{
+    "colors": {
+        "textView_col": [
+            255,
+            255,
+            255
+        ],
+        "font_col": [
+            0,
+            0,
+            0
+        ],
+        "bcg_col": [
+            0,
+            0,
+            0
+        ]
+    },
+    "testFolder": "TESTDIR8",
+    "false": "postTestNotes",
+    "testPlot": 55113,
+    "sensorBank": {
+        "IMU": {
+            "WDDV": {
+                "unit": "WWSC",
+                "last": "2017_7_13_9:20:31",
+                "a": "NaN",
+                "b": "NaN"
+            },
+            "imu1": {
+                "unit": "Deg",
+                "last": "2017-05-20,10:43",
+                "a": 1.0,
+                "b": 0.0
+            }
+        },
+        "LOAD_X": {
+            "loadx1": {
+                "unit": "N",
+                "last": "2080_1_6_0:3:58",
+                "a": 8.575,
+                "b": 93.375
+            }
+        },
+        "TEMP": {
+            "temp1": {
+                "unit": "C",
+                "last": "2017-05-20,10:43",
+                "a": 1.0,
+                "b": 0.0
+            },
+            "WWD": {
+                "unit": "WWS",
+                "last": "2017_7_13_9:34:8",
+                "a": "NaN",
+                "b": "NaN"
+            }
+        },
+        "POT": {
+            "pot1": {
+                "unit": "Deg",
+                "last": "2080_1_6_0:1:32",
+                "a": 306.5151167471819,
+                "b": 1.2916666666691357
+            }
+        },
+        "LOAD_Y": {
+            "loady1": {
+                "unit": "N",
+                "last": "2080_1_6_0:4:57",
+                "a": -99999.0,
+                "b": 1.0
+            }
+        },
+        "HUM": {
+            "hum1": {
+                "unit": "%",
+                "last": "2017_7_12_11:6:17",
+                "a": 1.0,
+                "b": 0.0
+            },
+            "WED": {
+                "unit": "WEE",
+                "last": "2017_7_13_9:26:17",
+                "a": "NaN",
+                "b": "NaN"
+            }
+        }
+    },
+    "preTestNotes": [
+        "1",
+        "1"
+    ],
+    "lcaWeight": 130,
+    "testHeight": 711111,
+    "postTestNotes": [
+        "2QQA"
+    ],
+    "dataConfirmFreq": 200,
+    "maxStartAngle": 5,
+    "version": "1.0.8",
+    "noteBank": [
+        "1WQSA",
+        "1"
+    ],
+    "sensors": {
+        "IMU": "imu1",
+        "LOAD_X": "loadx1",
+        "TEMP": "temp1",
+        "POT": "pot1",
+        "LOAD_Y": "loady1",
+        "HUM": "hum1"
+    },
+    "operator": "TESTER"
+}
