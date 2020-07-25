@@ -16,14 +16,17 @@ import threading as thr
 import sys
 import os
 
-cropDevErrorLogFile = open(d.ERROR_LOG_FILE, 'a+')
-sys.stderr = cropDevErrorLogFile
+if __name__ == '__main__':
+    cropDevErrorLogFile = open(d.ERROR_LOG_FILE, 'a+')
+    sys.stderr = cropDevErrorLogFile
 
 class CropDevMain:
     def __init__(self):
         self.run()
     def run(self):
         self.running = False
+        self.deleteNext = False
+        self.collectBarcode = True
         self.view = None
         self.readSettings()
 
@@ -36,7 +39,6 @@ class CropDevMain:
         self.initPG()
         self.test = None
 #         self.test = test.Test(self)
-
         self.loop()
     def pushMsg2Stack(self, msg):
         self.msgStack.append(msg)
@@ -137,6 +139,10 @@ class CropDevMain:
 
     def loop(self):
         while self.running:
+            if self.testingView.gbc == True & self.collectBarcode == True:
+                self.getBarcode()
+                self.testingView.gbc = False
+                self.blitScreen = True
             try:
                 self.btnInput.checkInput()
                 self.checkBtns()
@@ -317,6 +323,246 @@ class CropDevMain:
 #         os.chmod(writePath + d.SCREENSHOT_FORMAT, d.RW_PERM_A)#read write by anyone
 
         print('wrote screenshot to', writePath + d.SCREENSHOT_FORMAT)
+
+
+    #Added by Andrew Stucker (6/24/2020) during the barcode scanner update!
+    def getBarcode(self):
+
+        #Makes the screen black so that the only the barcode box is visible
+        self.disp.fill(self.bcg_col)
+
+        #backer is the background for the scanner stuff
+        backer = pg.Surface((300,200))
+        #Uses colors and variables from defs (imported as d)
+        backer.fill(d.white)
+        self.disp.blit(backer,(((d.width/2)-150),((d.height/2)-100)))
+
+
+        #Puts the informative text in the proper places
+        barcodeInfo = self.msgBdFont.render("Scan Barcode Now",True,d.black)
+        self.disp.blit(barcodeInfo,(((d.width/2)-145),((d.height/2)-95)))
+        header = self.msgBdFont.render("Value:",True,d.black)
+        self.disp.blit(header,(((d.width/2)-100),((d.height/2)-50)))
+
+        #Sets up the barcode printing area
+        barcodeBacker = pg.Surface((200,50))
+        barcodeBacker.fill(d.black)
+        self.disp.blit(barcodeBacker,(((d.width/2)-100),((d.height/2)-25)))
+
+        #Puts the button displays in the proper place
+        b1 = pg.Surface((d.btnXdim-(2*d.xMargin),d.btnYdim-(2*d.yMargin)))
+        b1.fill(d.white)
+        b2 = pg.Surface((d.btnXdim-(2*d.xMargin),d.btnYdim-(2*d.yMargin)))
+        b2.fill(d.white)
+        b3 = pg.Surface((d.btnXdim-(2*d.xMargin),d.btnYdim-(2*d.yMargin)))
+        b3.fill(d.white)
+        b4 = pg.Surface((d.btnXdim-(2*d.xMargin),d.btnYdim-(2*d.yMargin)))
+        b4.fill(d.white)
+        self.disp.blit(b1,(9,9))
+        self.disp.blit(b2,(9,129))
+        self.disp.blit(b3,(9,249))
+        self.disp.blit(b4,(9,369))
+
+        #Adds the text to the buttons on the left side of the screen
+        b1Text = self.btnFont.render("OKAY",True,d.black)
+        b2Text = self.btnFont.render("SKIP",True,d.black)
+        b3Text = self.btnFont.render("UNKNOWN",True,d.black)
+        b4Text = self.btnFont.render("DISABLE",True,d.black)
+        self.disp.blit(b1Text,(43,47))
+        self.disp.blit(b2Text,(50,167))
+        self.disp.blit(b3Text,(13,287))
+        self.disp.blit(b4Text,(28,407))
+    
+    
+        pg.display.update()
+        
+        #This is the variable read from the barcode scanner
+        barcode = ''
+
+
+        #These are the running variables
+        keepGoing = True    #Master control variable
+        deleteNext = False  #This holds whether or not the end of a barcode has been reached
+        goodChar = True     #Whether or not this is a valid char to add to barcode 
+
+        
+        while keepGoing == True:
+
+            #This section of code reads in the button presses and interprets them
+            self.btnInput.checkInput()
+            if self.btnInput.btnPresses[0] == True:
+                #This segment of code saves the barcode just as it is
+                keepGoing = False
+                self.btnInput.resetBtnPresses()
+                self.testingView.bc = barcode
+                sys.stderr.write(self.testingView.bc)
+            elif self.btnInput.btnPresses[1] == True:
+                #This segment of code saves nothing for the barcode
+                keepGoing = False
+                barcode = ''
+                self.btnInput.resetBtnPresses()
+                self.testingView.bc = barcode
+            elif self.btnInput.btnPresses[2] == True:
+                #This segment of code saves 'UNKNOWN' as the barcode
+                keepGoing = False
+                barcode = 'UNKNOWN'
+                self.btnInput.resetBtnPresses()
+                self.testingView.bc = barcode
+            elif self.btnInput.btnPresses[3] == True:
+                #This segment of code happens if you press 'DISABLE'
+                decision = self.disableBarcode()
+                if decision == 1:
+                    #Go back to the barcode screen with no problems
+                    self.btnInput.resetBtnPresses()
+
+                    #Redraw everything to the screen
+                    
+                    #Makes the screen back so that the only visible option is the barcode menu
+                    self.disp.fill(self.bcg_col)
+
+                    #backer is the background for the scanner stuff
+                    backer = pg.Surface((300,200))
+                    #Uses colors and variables from defs (imported as d)
+                    backer.fill(d.white)
+                    self.disp.blit(backer,(((d.width/2)-150),((d.height/2)-100)))
+
+
+                    #Puts the informative text in the proper places
+                    barcodeInfo = self.msgBdFont.render("Scan Barcode Now",True,d.black)
+                    self.disp.blit(barcodeInfo,(((d.width/2)-145),((d.height/2)-95)))
+                    header = self.msgBdFont.render("Value:",True,d.black)
+                    self.disp.blit(header,(((d.width/2)-100),((d.height/2)-50)))
+
+                    #Sets up the barcode printing area
+                    barcodeBacker = pg.Surface((200,50))
+                    barcodeBacker.fill(d.black)
+                    self.disp.blit(barcodeBacker,(((d.width/2)-100),((d.height/2)-25)))
+
+                    #Puts the button displays in the proper place
+                    b1 = pg.Surface((d.btnXdim-(2*d.xMargin),d.btnYdim-(2*d.yMargin)))
+                    b1.fill(d.white)
+                    b2 = pg.Surface((d.btnXdim-(2*d.xMargin),d.btnYdim-(2*d.yMargin)))
+                    b2.fill(d.white)
+                    b3 = pg.Surface((d.btnXdim-(2*d.xMargin),d.btnYdim-(2*d.yMargin)))
+                    b3.fill(d.white)
+                    b4 = pg.Surface((d.btnXdim-(2*d.xMargin),d.btnYdim-(2*d.yMargin)))
+                    b4.fill(d.white)
+                    self.disp.blit(b1,(9,9))
+                    self.disp.blit(b2,(9,129))
+                    self.disp.blit(b3,(9,249))
+                    self.disp.blit(b4,(9,369))
+
+                    #Adds the text to the buttons on the left side of the screen
+                    b1Text = self.btnFont.render("OKAY",True,d.black)
+                    b2Text = self.btnFont.render("SKIP",True,d.black)
+                    b3Text = self.btnFont.render("UNKNOWN",True,d.black)
+                    b4Text = self.btnFont.render("DISABLE",True,d.black)
+                    self.disp.blit(b1Text,(43,47))
+                    self.disp.blit(b2Text,(50,167))
+                    self.disp.blit(b3Text,(13,287))
+                    self.disp.blit(b4Text,(28,407))
+
+                    self.disp.blit(text,(((d.width/2)-95),((d.height/2)-13)))
+                
+                
+                    pg.display.update()
+                    
+                elif decision == 0:
+                    keepRunning = False
+                    barcode = ''
+                    self.testingView.bc = barcode
+                    self.collectBarcode = False
+                    self.btnInput.resetBtnPresses()
+                    
+            
+            
+            for event in pg.event.get():
+                if event.type == pg.QUIT:
+                    keepGoing = False
+                    goodChar = False
+                if event.type == pg.KEYDOWN:
+                    #Assume an inputted character is good until proven otherwise
+                    goodChar = True
+
+                    #Escape key is 27. A manual exit if no barcode is plugged in
+                    #Carriage return key is 13. The barcode scanner sends this at the end of every reading
+                    if event.key == 27:
+                        keepGoing = False
+                        goodChar = False
+                    elif event.key == 13:
+                        goodChar = False
+                        deleteNext = True
+                    elif event.key == 8:
+                        goodChar = False
+                        barcode = barcode[:-1]
+                        text = self.numKeyFont.render(barcode,True,d.white)
+                        self.disp.blit(barcodeBacker,(((d.width/2)-100),((d.height/2)-25)))
+                        self.disp.blit(text,(((d.width/2)-95),((d.height/2)-13)))
+                        pg.display.update()
+                        
+
+                    #If the carriage return was the last character and new characters are incoming, erase the current value in barcode
+                    if goodChar == True & deleteNext == True:
+                        barcode = ''
+                        deleteNext = False
+
+                    #Actually adds a character to the barcode variable
+                    if goodChar == True:
+                        barcode = barcode + event.unicode
+                        text = self.numKeyFont.render(barcode,True,d.white)
+                        self.disp.blit(barcodeBacker,(((d.width/2)-100),((d.height/2)-25)))
+                        self.disp.blit(text,(((d.width/2)-95),((d.height/2)-13)))
+                        pg.display.update()
+
+    def disableBarcode(self):
+
+        #Fills the background
+        self.disp.fill(self.bcg_col)
+
+        #Background for the message
+        backer = pg.Surface((300,200))
+        #Uses colors and variables from defs (imported as d)
+        backer.fill(d.white)
+        self.disp.blit(backer,(((d.width/2)-150),((d.height/2)-100)))
+
+        #Puts the button displays in the proper place
+        b1 = pg.Surface((d.btnXdim-(2*d.xMargin),d.btnYdim-(2*d.yMargin)))
+        b1.fill(d.white)
+        b2 = pg.Surface((d.btnXdim-(2*d.xMargin),d.btnYdim-(2*d.yMargin)))
+        b2.fill(d.white)
+        self.disp.blit(b1,(9,9))
+        self.disp.blit(b2,(9,129))
+
+        #Adds the text to the buttons on the left side of the screen
+        b1Text = self.btnFont.render("OKAY",True,d.black)
+        b2Text = self.btnFont.render("CANCEL",True,d.black)
+        self.disp.blit(b1Text,(43,47))
+        self.disp.blit(b2Text,(35,167))
+
+        l1Text = self.btnFont.render("OKAY to disable barcode.",True,d.black)
+        l2Text = self.btnFont.render("You will not be able to",True,d.black)
+        l3Text = self.btnFont.render("use the barcode until you",True,d.black)
+        l4Text = self.btnFont.render("restart the device.",True,d.black)
+        self.disp.blit(l1Text,(172,155))
+        self.disp.blit(l2Text,(172,185))
+        self.disp.blit(l3Text,(172,215))
+        self.disp.blit(l4Text,(172,245))
+        
+        
+        pg.display.update()
+
+        keepRunning = True
+
+        while keepRunning == True:
+            self.btnInput.checkInput()
+            if self.btnInput.btnPresses[0] == True:
+                return 0
+            elif self.btnInput.btnPresses[1] == True:
+                return 1
+
+                        
+                        
+
 
 if __name__ == '__main__':
 #     cropDevErrorLogFile = open('/home/pi/Desktop/cropDevErrorLogFile.txt', 'a+')

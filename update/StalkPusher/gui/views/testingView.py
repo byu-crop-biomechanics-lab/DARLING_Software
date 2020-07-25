@@ -24,6 +24,7 @@ from utils import postProcess as pp
 from utils import dateParse as dp
 from items import viewBtn as vb
 from utils import timer as tim
+import sys
 import math
 preTest = 0
 inTest = 1
@@ -130,6 +131,10 @@ class TestingView(v.View):
                           )
 
 
+        #self.bc holds the scanned barcode
+        #self.gbc is used in cropDev.py in main to trigger barcode collection
+        self.gbc = False
+        self.bc = ''
 #         self.makeConfirmMsgs()
 
     def updateButtons(self):
@@ -310,6 +315,7 @@ class TestingView(v.View):
 
         dataMatrix.append(['PLOT',self.app.getSetting(d.TEST_PLOT), d.PLOT_UNIT])
         dataMatrix.append(['HEIGHT',self.app.getSetting(d.TEST_HEIGHT), d.HEIGHT_UNIT])
+        dataMatrix.append(['BARCODE',self.bc])
 
         dataMatrix.append(['TEMPERATURE', self.app.getEnvData(d.TEMPERATURE), self.getUnit(d.DS_TEMP)])
         dataMatrix.append(['HUMIDITY', self.app.getEnvData(d.HUMIDITY), self.getUnit(d.DS_HUM)])
@@ -587,7 +593,10 @@ class TestingView(v.View):
     def addSaveBtn(self):
         self.addBtn(2, self.saveBtnDef, postTest)
 
-    def stopTest(self):
+    def stopTest(self):                   
+        #This variable is used to trigger the barcode screen pop up
+        self.gbc = True
+
         #self.focusNum = 2
 #         self.stopDataIn = t.time()
         self.app.streaming = False
@@ -664,7 +673,6 @@ class TestingView(v.View):
 
         self.redrawGraph()
         self.title = 'TEST ' + str(d.testNumber) + ' RESULTS'
-
 
     def recalcWAdjLoads(self):
         mass = self.app.getSetting(d.LCA_WEIGHT)#always in grams
@@ -1009,6 +1017,8 @@ class TestingView(v.View):
         self.bringIfConfirmMsg()
         super().focusOn()
 
+
+
     class NoteListWrapper:
         def __init__(self, app, disp, geoData, list = None, listName='', focus= False, metaData={}):
             self.app = app
@@ -1033,3 +1043,9 @@ class TestingView(v.View):
         def display(self):
             pg.draw.rect(self.disp, self.bcgCol, (self.x - self.xdim / 2, self.y - self.ydim / 2, self.xdim, self.ydim))
             self.nl.display()
+
+
+
+                        
+
+        

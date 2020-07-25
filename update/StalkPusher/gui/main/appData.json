@@ -1,4 +1,67 @@
 {
+    "testFolder": "BREAKHEIGHT",
+    "dataConfirmFreq": 200,
+    "postTestNotes": [
+        "ROOT",
+        "STALK",
+        "NOBREAK"
+    ],
+    "version": "1.0.11",
+    "maxStartAngle": 5,
+    "testHeight": 150,
+    "operator": "WEBB",
+    "sensorBank": {
+        "HUM": {
+            "hum1": {
+                "b": 0.0,
+                "last": "2017-05-20,10:43",
+                "unit": "%",
+                "a": 1.0
+            }
+        },
+        "POT": {
+            "pot1": {
+                "b": 0.0,
+                "last": "2019_11_9_16:49:41",
+                "unit": "Deg",
+                "a": 1.0
+            }
+        },
+        "TEMP": {
+            "temp1": {
+                "b": 0.0,
+                "last": "2017-05-20,10:43",
+                "unit": "C",
+                "a": 1.0
+            }
+        },
+        "IMU": {
+            "imu1": {
+                "b": 0.0,
+                "last": "2017-05-20,10:43",
+                "unit": "Deg",
+                "a": 1.0
+            }
+        },
+        "LOAD_Y": {
+            "NONE": {
+                "b": 0.0,
+                "last": "2017_7_8_16:22:58",
+                "unit": "ADC",
+                "a": 1.0
+            }
+        },
+        "LOAD_X": {
+            "717521": {
+                "b": 0.0,
+                "last": "2019_11_9_16:30:58",
+                "unit": "LB.",
+                "a": 25.0
+            }
+        }
+    },
+    "preTestNotes": [],
+    "testPlot": 1,
     "colors": {
         "textView_col": [
             255,
@@ -16,100 +79,17 @@
             0
         ]
     },
-    "testFolder": "TESTDIR8",
-    "false": "postTestNotes",
-    "testPlot": 55113,
-    "sensorBank": {
-        "IMU": {
-            "WDDV": {
-                "unit": "WWSC",
-                "last": "2017_7_13_9:20:31",
-                "a": "NaN",
-                "b": "NaN"
-            },
-            "imu1": {
-                "unit": "Deg",
-                "last": "2017-05-20,10:43",
-                "a": 1.0,
-                "b": 0.0
-            }
-        },
-        "LOAD_X": {
-            "loadx1": {
-                "unit": "N",
-                "last": "2080_1_6_0:3:58",
-                "a": 8.575,
-                "b": 93.375
-            }
-        },
-        "TEMP": {
-            "temp1": {
-                "unit": "C",
-                "last": "2017-05-20,10:43",
-                "a": 1.0,
-                "b": 0.0
-            },
-            "WWD": {
-                "unit": "WWS",
-                "last": "2017_7_13_9:34:8",
-                "a": "NaN",
-                "b": "NaN"
-            }
-        },
-        "POT": {
-            "pot1": {
-                "unit": "Deg",
-                "last": "2080_1_6_0:1:32",
-                "a": 306.5151167471819,
-                "b": 1.2916666666691357
-            }
-        },
-        "LOAD_Y": {
-            "loady1": {
-                "unit": "N",
-                "last": "2080_1_6_0:4:57",
-                "a": -99999.0,
-                "b": 1.0
-            }
-        },
-        "HUM": {
-            "hum1": {
-                "unit": "%",
-                "last": "2017_7_12_11:6:17",
-                "a": 1.0,
-                "b": 0.0
-            },
-            "WED": {
-                "unit": "WEE",
-                "last": "2017_7_13_9:26:17",
-                "a": "NaN",
-                "b": "NaN"
-            }
-        }
-    },
-    "preTestNotes": [
-        "1",
-        "1"
-    ],
-    "lcaWeight": 130,
-    "testHeight": 711111,
-    "postTestNotes": [
-        "2QQA"
-    ],
-    "dataConfirmFreq": 200,
-    "maxStartAngle": 5,
-    "version": "1.0.11",
     "noteBank": [
-        "1WQSA",
-        "1"
+        "DRY",
+        "RAINY"
     ],
     "sensors": {
-        "IMU": "imu1",
-        "LOAD_X": "loadx1",
-        "TEMP": "temp1",
+        "HUM": "hum1",
         "POT": "pot1",
-        "LOAD_Y": "loady1",
-        "HUM": "hum1"
+        "TEMP": "temp1",
+        "IMU": "imu1",
+        "LOAD_Y": "NONE",
+        "LOAD_X": "717521"
     },
-    "operator": "TESTER"
+    "lcaWeight": 0
 }
